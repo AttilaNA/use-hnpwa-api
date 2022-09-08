@@ -30,6 +30,16 @@ namespace HackerNewsClient.Controllers
             return View();
         }
 
+        public RedirectResult StartPage()
+        {
+            return new RedirectResult("/Home/Index", true, true);
+        }
+
+        public string TopNews()
+        {
+            
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
