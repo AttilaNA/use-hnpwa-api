@@ -3,18 +3,19 @@
 
 // Write your JavaScript code.
 
-init();
+let topNewsAnchor = document.querySelector("a.nav-link.text-dark.top-news");
+topNewsAnchor.addEventListener("click", topNews);
 
-function init(){
-    makeTopNewsClickable();
+function topNews(anchor){
+    let response = apiGet("/Api/Top/")
+    console.log(response);
 }
 
-function makeTopNewsClickable(){
-    const tag = document.querySelector("a.nav-link.text-dark.top-news");
-    tag.addEventListener("click", getNews);
-}
-
-async function getNews(){
-    const response = await fetch('/Home/TopNews/' )
-    console.log(await response.json());
+function apiGet(url) {
+    let response = fetch(url, {
+        method: "GET",
+    });
+    if (response.ok) {
+        return response.json();
+    }
 }

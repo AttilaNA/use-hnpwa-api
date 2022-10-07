@@ -1,7 +1,10 @@
+using System;
 using HackerNewsClient.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Net.Http.Json;
 
 namespace HackerNewsClient.Controllers
 {
@@ -29,15 +32,10 @@ namespace HackerNewsClient.Controllers
         {
             return View();
         }
-
-        public RedirectResult StartPage()
+        
+        public ActionResult HacksonNews()
         {
-            return new RedirectResult("/Home/Index", true, true);
-        }
-
-        public string TopNews()
-        {
-            
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
