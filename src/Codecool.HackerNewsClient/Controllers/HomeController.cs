@@ -1,7 +1,10 @@
+using System;
 using HackerNewsClient.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Net.Http.Json;
 
 namespace HackerNewsClient.Controllers
 {
@@ -28,6 +31,11 @@ namespace HackerNewsClient.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        public ActionResult HacksonNews()
+        {
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
