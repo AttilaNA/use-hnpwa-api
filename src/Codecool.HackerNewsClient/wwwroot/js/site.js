@@ -6,13 +6,13 @@
 let topNewsAnchor = document.querySelector("a.nav-link.text-dark.top-news");
 topNewsAnchor.addEventListener("click", topNews);
 
-function topNews(anchor){
-    let response = apiGet("/Api/Top/")
-    console.log(response);
+async function topNews(anchor){
+    let response = await apiGet("/Api/Top/");
+    response.forEach(x => console.log(x));
 }
 
-function apiGet(url) {
-    let response = fetch(url, {
+async function apiGet(url) {
+    let response = await fetch(url, {
         method: "GET",
     });
     if (response.ok) {

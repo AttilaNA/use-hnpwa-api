@@ -4,11 +4,9 @@
 <div class="jumbotron">
     Welcome
 </div>
-<div class="row">
-    <div class="col-md-4">
+@foreach (var response in ViewBag.Response)
+{
+    <div class="row">
+        @response.Title
     </div>
-    <div class="col-md-4">
-    </div>
-    <div class="col-md-4">
-    </div>
-</div>
+}

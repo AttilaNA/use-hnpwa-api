@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using HackerNewsClient.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Json;
+using Newtonsoft.Json;
 
 namespace HackerNewsClient.Controllers
 {
@@ -30,6 +32,9 @@ namespace HackerNewsClient.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
+            var client = new HttpClient();
+            var response = client.GetStringAsync("https://api.hnpwa.com/v0/news/1.json").Result;
+            ViewBag.Response = JsonConvert.DeserializeObject<List<News>>(response);
             return View();
         }
         
