@@ -4,11 +4,22 @@
 <div class="jumbotron">
     Welcome
 </div>
-<div class="row">
-    <div class="col-md-4">
-    </div>
-    <div class="col-md-4">
-    </div>
-    <div class="col-md-4">
-    </div>
+<div class="news" data-current-page="1">
+@for(int i = 0; i < ViewBag.Length; i += 4)
+{
+    <div class="row">
+        @for (int j = 0 + i; j < 4 + i && j < ViewBag.Length; j++)
+        {
+            <div class="col-12 col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <a href="@ViewBag.News[j].Url" class="btn btn-primary">@ViewBag.News[j].Title</a><br><br>
+                        <h5 class="card-title">@ViewBag.News[j].User</h5>
+                        <p class="card-text">@ViewBag.News[j].Time_Ago</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div><br>
+}
 </div>
