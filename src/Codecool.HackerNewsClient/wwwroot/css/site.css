@@ -70,6 +70,8 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
-a.nav-link.text-dark.top-news {
+a.nav-link.text-dark.top-news,
+li.page-item.previous,
+li.page-item.next {
   cursor: pointer;
 }

@@ -3,15 +3,23 @@
 
 // Write your JavaScript code.
 
-let topNewsAnchor = document.querySelector("a.nav-link.text-dark.top-news");
-topNewsAnchor.addEventListener("click", ShowTopNews);
+init();
+
+function init(){
+    let topNewsAnchor = document.querySelector("a.nav-link.text-dark.top-news");
+    topNewsAnchor.addEventListener("click", ShowTopNews);
+}
 
 async function ShowTopNews(anchor){
     let response = await apiGet("/Api/Top/");
-    console.log(response);
     let newsDiv = document.querySelector("body > div > main > div.news");
     emptyContainer(newsDiv);
     fillContainerWithResponse(newsDiv ,response);
+    showPagination(newsDiv, response);
+    let previous = document.querySelector("li.page-item.previous");
+    previous.addEventListener("click", ShowNews);
+    let next = document.querySelector("li.page-item.next");
+    next.addEventListener("click", ShowNews);
 }
 
 async function apiGet(url) {
@@ -28,6 +36,7 @@ function emptyContainer(container){
 }
 
 function fillContainerWithResponse(container, response){
+    container.setAttribute("data-current-page", 1);
     for (let i = 0; i < response.length; i += 4){
         let row = document.createElement("div");
         row.classList.add("row");
@@ -46,4 +55,56 @@ function fillContainerWithResponse(container, response){
         }
         container.insertAdjacentHTML('beforeend', '<br>');
     }
+}
+
+function showPagination(container, response){
+    let previous = document.querySelector("li.page-item.previous");
+    let next = document.querySelector("li.page-item.next");
+    
+    if (previous || next){
+        deletePagination();
+    }
+    
+    let previousSide;
+    let nextSide;
+    
+    if (response.length === 30){
+        if (parseInt(container.dataset.currentPage) === 1){
+            previousSide = 1;
+            nextSide = 2;
+        } else {
+            previousSide = parseInt(container.dataset.currentPage) - 1;
+            nextSide = parseInt(container.dataset.currentPage) + 1;
+        }
+    } else {
+        previousSide = parseInt(container.dataset.currentPage) - 1;
+        nextSide = parseInt(container.dataset.currentPage);
+    }
+    
+    let pagination = `<nav class="navigation" aria-label="Page navigation example">
+                        <ul class="pagination">
+                          <li class="page-item previous"><a class="page-link" data-side="${previousSide}">Previous</a></li>
+                          <li class="page-item next"><a class="page-link" data-side="${nextSide}">Next</a></li>
+                        </ul>
+                      </nav>`
+    container.insertAdjacentHTML('beforebegin', pagination);
+}
+
+function deletePagination(){
+    let parent = document.querySelector("main.pb-3");
+    let pagination = document.querySelector("nav.navigation");
+    parent.removeChild(pagination);
+}
+
+async function ShowNews(button){
+    let response = await apiGet(`/Api/Top?Page=${button.target.dataset.side}`);
+    let newsDiv = document.querySelector("body > div > main > div.news");
+    emptyContainer(newsDiv);
+    fillContainerWithResponse(newsDiv ,response);
+    newsDiv.dataset.currentPage = button.target.dataset.side;
+    showPagination(newsDiv, response);
+    let previous = document.querySelector("li.page-item.previous");
+    previous.addEventListener("click", ShowNews);
+    let next = document.querySelector("li.page-item.next");
+    next.addEventListener("click", ShowNews);
 }

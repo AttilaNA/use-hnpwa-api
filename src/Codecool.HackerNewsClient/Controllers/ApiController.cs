@@ -11,10 +11,11 @@ namespace HackerNewsClient.Controllers;
 
 public class ApiController : Controller
 {
-    public string Top()
+    public string Top(string page)
     {
+        var side = page == null ? 1 : Int32.Parse(page);
         var client = new HttpClient();
-        var response = client.GetStringAsync("https://api.hnpwa.com/v0/news/1.json").Result;
+        var response = client.GetStringAsync($"https://api.hnpwa.com/v0/news/{side}.json").Result;
         var deserializedResponse = JsonConvert.DeserializeObject<List<News>>(response);
         return JsonConvert.SerializeObject(deserializedResponse);
     }
