@@ -10,6 +10,8 @@ function init(){
     topNewsAnchor.addEventListener("click", ShowTopNews);
     let newestAnchor = document.querySelector("a.nav-link.text-dark.newest");
     newestAnchor.addEventListener("click", ShowNewestNews);
+    let jobsAnchor = document.querySelector("a.nav-link.text-dark.jobs");
+    jobsAnchor.addEventListener("click", ShowJobs);
 }
 
 async function ShowTopNews(){
@@ -36,6 +38,18 @@ async function ShowNewestNews(){
     next.addEventListener("click", ShowNewest);
 }
 
+async function ShowJobs(){
+    let response = await apiGet("/Api/Jobs/");
+    let newsDiv = document.querySelector("body > div > main > div.news");
+    emptyContainer(newsDiv);
+    fillContainerWithResponse(newsDiv ,response);
+    showPagination(newsDiv, response);
+    let previous = document.querySelector("li.page-item.previous");
+    previous.addEventListener("click", ShowJobsPerPage);
+    let next = document.querySelector("li.page-item.next");
+    next.addEventListener("click", ShowJobsPerPage);
+}
+
 async function apiGet(url) {
     let response = await fetch(url, {
         method: "GET",
@@ -56,16 +70,28 @@ function fillContainerWithResponse(container, response){
         row.classList.add("row");
         container.appendChild(row);
         for (let j = 0 + i; j < 4 + i && j < response.length; j++) {
-            let card = `<div class="col-12 col-md-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <a href="${response[j]['Url']}" class="btn btn-primary">${response[j]['Title']}</a><br><br>
-                                    <h5 class="card-title">${response[j]['User']}</h5>
-                                    <p class="card-text">${response[j]['Time_Ago']}</p>
+            if (response[j]['User'] != null){
+                let card = `<div class="col-12 col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <a href="${response[j]['Url']}" class="btn btn-primary">${response[j]['Title']}</a><br><br>
+                                        <h5 class="card-title">${response[j]['User']}</h5>
+                                        <p class="card-text">${response[j]['Time_Ago']}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>`
-            row.insertAdjacentHTML('beforeend', card);
+                            </div>`
+                row.insertAdjacentHTML('beforeend', card);
+            } else {
+                let card = `<div class="col-12 col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <a href="${response[j]['Url']}" class="btn btn-primary">${response[j]['Title']}</a><br><br>
+                                        <p class="card-text">${response[j]['Time_Ago']}</p>
+                                    </div>
+                                </div>
+                            </div>`
+                row.insertAdjacentHTML('beforeend', card);
+            }
         }
         container.insertAdjacentHTML('beforeend', '<br>');
     }
@@ -134,4 +160,17 @@ async function ShowNewest(button){
     previous.addEventListener("click", ShowNewest);
     let next = document.querySelector("li.page-item.next");
     next.addEventListener("click", ShowNewest);
+}
+
+async function ShowJobsPerPage(button){
+    let response = await apiGet(`/Api/Jobs?Page=${button.target.dataset.side}`);
+    let newsDiv = document.querySelector("body > div > main > div.news");
+    emptyContainer(newsDiv);
+    fillContainerWithResponse(newsDiv ,response);
+    newsDiv.dataset.currentPage = button.target.dataset.side;
+    showPagination(newsDiv, response);
+    let previous = document.querySelector("li.page-item.previous");
+    previous.addEventListener("click", ShowJobsPerPage);
+    let next = document.querySelector("li.page-item.next");
+    next.addEventListener("click", ShowJobsPerPage);
 }
