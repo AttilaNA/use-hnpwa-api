@@ -19,4 +19,13 @@ public class ApiController : Controller
         var deserializedResponse = JsonConvert.DeserializeObject<List<News>>(response);
         return JsonConvert.SerializeObject(deserializedResponse);
     }
+    
+    public string Newest(string page)
+    {
+        var side = page == null ? 1 : Int32.Parse(page);
+        var client = new HttpClient();
+        var response = client.GetStringAsync($"https://api.hnpwa.com/v0/newest/{side}.json").Result;
+        var deserializedResponse = JsonConvert.DeserializeObject<List<News>>(response);
+        return JsonConvert.SerializeObject(deserializedResponse);
+    }
 }
