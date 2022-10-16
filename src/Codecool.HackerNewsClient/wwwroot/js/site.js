@@ -8,18 +8,32 @@ init();
 function init(){
     let topNewsAnchor = document.querySelector("a.nav-link.text-dark.top-news");
     topNewsAnchor.addEventListener("click", ShowTopNews);
+    let newestAnchor = document.querySelector("a.nav-link.text-dark.newest");
+    newestAnchor.addEventListener("click", ShowNewestNews);
 }
 
-async function ShowTopNews(anchor){
+async function ShowTopNews(){
     let response = await apiGet("/Api/Top/");
     let newsDiv = document.querySelector("body > div > main > div.news");
     emptyContainer(newsDiv);
     fillContainerWithResponse(newsDiv ,response);
     showPagination(newsDiv, response);
     let previous = document.querySelector("li.page-item.previous");
-    previous.addEventListener("click", ShowNews);
+    previous.addEventListener("click", ShowTop);
     let next = document.querySelector("li.page-item.next");
-    next.addEventListener("click", ShowNews);
+    next.addEventListener("click", ShowTop);
+}
+
+async function ShowNewestNews(){
+    let response = await apiGet("/Api/Newest/");
+    let newsDiv = document.querySelector("body > div > main > div.news");
+    emptyContainer(newsDiv);
+    fillContainerWithResponse(newsDiv ,response);
+    showPagination(newsDiv, response);
+    let previous = document.querySelector("li.page-item.previous");
+    previous.addEventListener("click", ShowNewest);
+    let next = document.querySelector("li.page-item.next");
+    next.addEventListener("click", ShowNewest);
 }
 
 async function apiGet(url) {
@@ -96,7 +110,7 @@ function deletePagination(){
     parent.removeChild(pagination);
 }
 
-async function ShowNews(button){
+async function ShowTop(button){
     let response = await apiGet(`/Api/Top?Page=${button.target.dataset.side}`);
     let newsDiv = document.querySelector("body > div > main > div.news");
     emptyContainer(newsDiv);
@@ -104,7 +118,20 @@ async function ShowNews(button){
     newsDiv.dataset.currentPage = button.target.dataset.side;
     showPagination(newsDiv, response);
     let previous = document.querySelector("li.page-item.previous");
-    previous.addEventListener("click", ShowNews);
+    previous.addEventListener("click", ShowTop);
     let next = document.querySelector("li.page-item.next");
-    next.addEventListener("click", ShowNews);
+    next.addEventListener("click", ShowTop);
+}
+
+async function ShowNewest(button){
+    let response = await apiGet(`/Api/Newest?Page=${button.target.dataset.side}`);
+    let newsDiv = document.querySelector("body > div > main > div.news");
+    emptyContainer(newsDiv);
+    fillContainerWithResponse(newsDiv ,response);
+    newsDiv.dataset.currentPage = button.target.dataset.side;
+    showPagination(newsDiv, response);
+    let previous = document.querySelector("li.page-item.previous");
+    previous.addEventListener("click", ShowNewest);
+    let next = document.querySelector("li.page-item.next");
+    next.addEventListener("click", ShowNewest);
 }

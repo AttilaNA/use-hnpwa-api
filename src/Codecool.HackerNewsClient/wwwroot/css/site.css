@@ -71,6 +71,7 @@ body {
 }
 
 a.nav-link.text-dark.top-news,
+a.nav-link.text-dark.newest,
 li.page-item.previous,
 li.page-item.next {
   cursor: pointer;
