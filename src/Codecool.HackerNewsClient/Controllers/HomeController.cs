@@ -34,7 +34,8 @@ namespace HackerNewsClient.Controllers
         {
             var client = new HttpClient();
             var response = client.GetStringAsync("https://api.hnpwa.com/v0/news/1.json").Result;
-            ViewBag.Response = JsonConvert.DeserializeObject<List<News>>(response);
+            ViewBag.News = JsonConvert.DeserializeObject<List<News>>(response);
+            ViewBag.Length = ViewBag.News.Count;
             return View();
         }
         

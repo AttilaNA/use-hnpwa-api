@@ -15,6 +15,7 @@ public class ApiController : Controller
     {
         var client = new HttpClient();
         var response = client.GetStringAsync("https://api.hnpwa.com/v0/news/1.json").Result;
-        return response;
+        var deserializedResponse = JsonConvert.DeserializeObject<List<News>>(response);
+        return JsonConvert.SerializeObject(deserializedResponse);
     }
 }

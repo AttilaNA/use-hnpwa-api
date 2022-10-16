@@ -4,11 +4,14 @@
 // Write your JavaScript code.
 
 let topNewsAnchor = document.querySelector("a.nav-link.text-dark.top-news");
-topNewsAnchor.addEventListener("click", topNews);
+topNewsAnchor.addEventListener("click", ShowTopNews);
 
-async function topNews(anchor){
+async function ShowTopNews(anchor){
     let response = await apiGet("/Api/Top/");
-    response.forEach(x => console.log(x));
+    console.log(response);
+    let newsDiv = document.querySelector("body > div > main > div.news");
+    emptyContainer(newsDiv);
+    fillContainerWithResponse(newsDiv ,response);
 }
 
 async function apiGet(url) {
@@ -17,5 +20,30 @@ async function apiGet(url) {
     });
     if (response.ok) {
         return response.json();
+    }
+}
+
+function emptyContainer(container){
+    container.replaceChildren();
+}
+
+function fillContainerWithResponse(container, response){
+    for (let i = 0; i < response.length; i += 4){
+        let row = document.createElement("div");
+        row.classList.add("row");
+        container.appendChild(row);
+        for (let j = 0 + i; j < 4 + i && j < response.length; j++) {
+            let card = `<div class="col-12 col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <a href="${response[j]['Url']}" class="btn btn-primary">${response[j]['Title']}</a><br><br>
+                                    <h5 class="card-title">${response[j]['User']}</h5>
+                                    <p class="card-text">${response[j]['Time_Ago']}</p>
+                                </div>
+                            </div>
+                        </div>`
+            row.insertAdjacentHTML('beforeend', card);
+        }
+        container.insertAdjacentHTML('beforeend', '<br>');
     }
 }
